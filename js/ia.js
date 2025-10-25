@@ -1,6 +1,5 @@
-// js/ia.js
 const WORKER_URL = "https://simplex.saulalopezg.workers.dev/explain";
-const MODEL = "gemini-1.5-flash"; // <- sin "models/"
+const MODEL = "gemini-1.5-flash";
 
 export async function explain(method, context, prompt) {
   const res = await fetch(WORKER_URL, {
