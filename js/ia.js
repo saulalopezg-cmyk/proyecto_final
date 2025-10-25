@@ -1,6 +1,6 @@
 // js/ia.js
 const WORKER_URL = "https://simplex.saulalopezg.workers.dev/explain";
-const MODEL = "models/gemini-1.5-flash"; // cambia a "models/gemini-2.5-pro" si tu key lo soporta
+const MODEL = "gemini-1.5-flash"; // <- sin "models/"
 
 export async function explain(method, context, prompt) {
   const res = await fetch(WORKER_URL, {
@@ -11,7 +11,6 @@ export async function explain(method, context, prompt) {
 
   let data = {};
   try { data = await res.json(); } catch {}
-
   if (!res.ok) {
     console.error("❌ Worker error payload:", data);
     throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
