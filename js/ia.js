@@ -1,20 +1,28 @@
+// js/ia.js
+const WORKER_URL = "https://simplex.saulalopezg.workers.dev/explain";
+const MODEL = "models/gemini-1.5-flash"; // cambia a "models/gemini-2.5-pro" si tu key lo soporta
+
 export async function explain(method, context, prompt) {
-  const res = await fetch("https://simplex.saulalopezg.workers.dev/explain", {
+  const res = await fetch(WORKER_URL, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      // PRUEBA: fuerzo un modelo estable para descartar modelo no disponible
-      model: "models/gemini-1.5-flash",
-      method,
-      context,
-      prompt
-    })
+    body: JSON.stringify({ model: MODEL, method, context, prompt })
   });
+
   let data = {};
   try { data = await res.json(); } catch {}
+
   if (!res.ok) {
     console.error("❌ Worker error payload:", data);
     throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
   }
   return data.text;
+}
+
+export function renderMarkdown(md, targetEl) {
+  targetEl.innerHTML = "";
+  const pre = document.createElement("pre");
+  pre.style.whiteSpace = "pre-wrap";
+  pre.textContent = md || "[IA] Respuesta vacía.";
+  targetEl.appendChild(pre);
 }

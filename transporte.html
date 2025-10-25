@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Método de Transporte</title>
-  <link rel="stylesheet" href="css/style3.css">
-   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4b2e05">
+  <link rel="stylesheet" href="css/style3.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4b2e05" />
+  <link rel="icon" href="data:,">
 </head>
 <body>
   <div class="container">
@@ -15,10 +15,10 @@
 
     <div class="config">
       <label for="numOrigenes">Número de orígenes:</label>
-      <input type="number" id="numOrigenes" min="1" value="2">
+      <input type="number" id="numOrigenes" min="1" value="2" />
 
       <label for="numDestinos">Número de destinos:</label>
-      <input type="number" id="numDestinos" min="1" value="3">
+      <input type="number" id="numDestinos" min="1" value="3" />
 
       <label for="tipoProblema">Tipo de problema:</label>
       <select id="tipoProblema">
@@ -35,11 +35,10 @@
       <button id="resolverBtn" onclick="resolverTransporte()" style="display:none;">Resolver</button>
     </div>
 
-<div class="center-btn" style="margin-top:12px;">
-  <button id="btnExplicarTransporteIA" type="button">Explicar con IA</button>
-</div>
-<div id="salidaIATransporte" style="margin-top:12px;"></div>
-
+    <div class="center-btn" style="margin-top:12px;">
+      <button id="btnExplicarTransporteIA" type="button">Explicar con IA</button>
+    </div>
+    <div id="salidaIATransporte" style="margin-top:12px;"></div>
 
     <div id="resultado"></div>
 
@@ -50,62 +49,54 @@
 
   <script src="js/script3.js"></script>
   <script src="app.js"></script>
-  <script type="module" src="js/ia.js"></script>
-
 
   <script type="module">
-import { explain, renderMarkdown } from "./js/ia.js";
+    import { explain, renderMarkdown } from "./js/ia.js?v=6";
 
+    function collectTransporteContext() {
+      const numO = parseInt(document.getElementById("numOrigenes").value);
+      const numD = parseInt(document.getElementById("numDestinos").value);
+      const tipo = document.getElementById("tipoProblema")?.value || "min";
 
-// Ajusta estos IDs a tu formulario real si varían
-function collectTransporteContext() {
-  const numO = parseInt(document.getElementById("numOrigenes").value);
-  const numD = parseInt(document.getElementById("numDestinos").value);
-  const tipo = document.getElementById("tipoProblema")?.value || "min"; // min | max
+      const costMatrix = [];
+      for (let i = 1; i <= numO; i++) {
+        const row = [];
+        for (let j = 1; j <= numD; j++) {
+          row.push(parseFloat(document.getElementById(`c${i}${j}`).value || "0"));
+        }
+        costMatrix.push(row);
+      }
 
-  const costMatrix = [];
-  for (let i = 1; i <= numO; i++) {
-    const row = [];
-    for (let j = 1; j <= numD; j++) {
-      row.push(parseFloat(document.getElementById(`c${i}${j}`).value || "0"));
+      const supply = [];
+      for (let i = 1; i <= numO; i++) {
+        supply.push(parseFloat(document.getElementById(`oferta${i}`).value || "0"));
+      }
+
+      const demand = [];
+      for (let j = 1; j <= numD; j++) {
+        demand.push(parseFloat(document.getElementById(`demanda${j}`).value || "0"));
+      }
+
+      return { tipo, costMatrix, supply, demand };
     }
-    costMatrix.push(row);
-  }
 
-  const supply = [];
-  for (let i = 1; i <= numO; i++) {
-    supply.push(parseFloat(document.getElementById(`oferta${i}`).value || "0"));
-  }
+    async function onExplicarTransporte() {
+      const out = document.getElementById("salidaIATransporte");
+      out.textContent = "Generando explicación...";
+      try {
+        const ctx = collectTransporteContext();
+        const md = await explain(
+          "transporte",
+          ctx,
+          "Resuelve el problema de Transporte: balanceo, solución inicial razonable (NW/costo mínimo/Vogel), mejoras (u-v/ciclos), iteraciones, costo total y prueba de optimalidad."
+        );
+        renderMarkdown(md, out);
+      } catch (e) {
+        out.textContent = "Error: " + e.message;
+      }
+    }
 
-  const demand = [];
-  for (let j = 1; j <= numD; j++) {
-    demand.push(parseFloat(document.getElementById(`demanda${j}`).value || "0"));
-  }
-
-  return { tipo, costMatrix, supply, demand };
-}
-
-async function onExplicarTransporte() {
-  const out = document.getElementById("salidaIATransporte");
-  out.textContent = "Generando explicación...";
-  try {
-    const ctx = collectTransporteContext();
-    const md = await explain(
-      "transporte",
-      ctx,
-      "Resuelve el problema de Transporte: balanceo, solución inicial razonable (NW/costo mínimo/Vogel), mejoras (u-v/ciclos), iteraciones, costo total y prueba de optimalidad."
-    );
-    renderMarkdown(md, out);
-  } catch (e) {
-    out.textContent = "Error: " + e.message;
-  }
-}
-
-document.getElementById("btnExplicarTransporteIA")
-  ?.addEventListener("click", onExplicarTransporte);
-</script>
-
-
+    document.getElementById("btnExplicarTransporteIA")?.addEventListener("click", onExplicarTransporte);
+  </script>
 </body>
 </html>
-

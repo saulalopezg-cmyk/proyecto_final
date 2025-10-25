@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Método Simplex</title>
-  <link rel="stylesheet" href="css/style2.css">
-   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4b2e05">
+  <link rel="stylesheet" href="css/style2.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4b2e05" />
+  <link rel="icon" href="data:,">
 </head>
 <body>
   <div class="container">
@@ -15,12 +16,12 @@
     <div class="config">
       <div class="campo">
         <label for="numVariables">Número de variables:</label>
-        <input type="number" id="numVariables" min="1" value="2">
+        <input type="number" id="numVariables" min="1" value="2" />
       </div>
 
       <div class="campo">
         <label for="numRestricciones">Número de restricciones:</label>
-        <input type="number" id="numRestricciones" min="1" value="2">
+        <input type="number" id="numRestricciones" min="1" value="2" />
       </div>
 
       <div class="campo">
@@ -36,80 +37,69 @@
 
     <div id="tablaContainer" class="tabla-responsive"></div>
 
-  <div class="botones">
-  <button id="resolverBtn" onclick="resolverSimplex()" style="display:none;">Resolver</button>
+    <div class="botones">
+      <button id="resolverBtn" onclick="resolverSimplex()" style="display:none;">Resolver</button>
 
-  <div class="center-btn" style="margin-top:12px;">
-    <button id="btnExplicarSimplexIA" type="button">Explicar con IA</button>
+      <div class="center-btn" style="margin-top:12px;">
+        <button id="btnExplicarSimplexIA" type="button">Explicar con IA</button>
+      </div>
+      <div id="salidaIASimplex" style="margin-top:12px;"></div>
+
+      <div class="center-btn" style="margin-top:12px;">
+        <a href="index.html"><button>Regresar al Inicio</button></a>
+      </div>
+    </div>
+
+    <div id="resultado"></div>
   </div>
-  <div id="salidaIASimplex" style="margin-top:12px;"></div>
-
-  <div class="center-btn" style="margin-top:12px;">
-    <a href="index.html"><button>Regresar al Inicio</button></a>
-  </div>
-</div>
-
 
   <script src="js/script2.js"></script>
   <script src="app.js"></script>
-<script type="module" src="js/ia.js"></script>
 
+  <script type="module">
+    import { explain, renderMarkdown } from "./js/ia.js?v=6";
 
-<script type="module">
-import { explain, renderMarkdown } from "./js/ia.js";
+    // Lee inputs generados por script2.js
+    function collectSimplexContext() {
+      const numVariables = parseInt(document.getElementById("numVariables").value);
+      const numRestricciones = parseInt(document.getElementById("numRestricciones").value);
+      const tipoOpt = document.getElementById("tipoOpt").value; // max | min
 
+      const restricciones = [];
+      for (let r = 1; r <= numRestricciones; r++) {
+        const coef = [];
+        for (let v = 1; v <= numVariables; v++) {
+          coef.push(parseFloat(document.getElementById(`r${r}v${v}`).value));
+        }
+        const ld = parseFloat(document.getElementById(`ld${r}`).value);
+        restricciones.push({ coef, ld });
+      }
 
-// Lee tus mismos inputs generados por script2.js  (IDs ya existentes)
-function collectSimplexContext() {
-  const numVariables = parseInt(document.getElementById("numVariables").value);
-  const numRestricciones = parseInt(document.getElementById("numRestricciones").value);
-  const tipoOpt = document.getElementById("tipoOpt").value; // max | min
+      const fo = [];
+      for (let v = 1; v <= numVariables; v++) {
+        fo.push(parseFloat(document.getElementById(`fo${v}`).value));
+      }
 
-  const restricciones = [];
-  for (let r = 1; r <= numRestricciones; r++) {
-    const coef = [];
-    for (let v = 1; v <= numVariables; v++) {
-      coef.push(parseFloat(document.getElementById(`r${r}v${v}`).value));
+      return { tipoOpt, numVariables, numRestricciones, restricciones, objetivo: fo };
     }
-    const ld = parseFloat(document.getElementById(`ld${r}`).value);
-    restricciones.push({ coef, ld });
-  }
 
-  const fo = [];
-  for (let v = 1; v <= numVariables; v++) {
-    fo.push(parseFloat(document.getElementById(`fo${v}`).value));
-  }
+    async function onExplicarSimplex() {
+      const out = document.getElementById("salidaIASimplex");
+      out.textContent = "Generando explicación...";
+      try {
+        const ctx = collectSimplexContext();
+        const md = await explain(
+          "simplex",
+          ctx,
+          "Explica paso a paso el Método Simplex: tableau inicial, pivotes por iteración, criterio de optimalidad, solución final, y comenta si hay degeneración o múltiples soluciones."
+        );
+        renderMarkdown(md, out);
+      } catch (e) {
+        out.textContent = "Error: " + e.message;
+      }
+    }
 
-  return {
-    tipoOpt,
-    numVariables,
-    numRestricciones,
-    restricciones,
-    objetivo: fo
-  };
-}
-
-async function onExplicarSimplex() {
-  const out = document.getElementById("salidaIASimplex");
-  out.textContent = "Generando explicación...";
-  try {
-    const ctx = collectSimplexContext();
-    const md = await explain(
-      "simplex",
-      ctx,
-      "Explica paso a paso el Método Simplex: tableau inicial, pivotes por iteración, criterio de optimalidad, solución final, y comenta si hay degeneración o múltiples soluciones."
-    );
-    renderMarkdown(md, out);
-  } catch (e) {
-    out.textContent = "Error: " + e.message;
-  }
-}
-
-document.getElementById("btnExplicarSimplexIA")
-  ?.addEventListener("click", onExplicarSimplex);
-</script>
-
-
+    document.getElementById("btnExplicarSimplexIA")?.addEventListener("click", onExplicarSimplex);
+  </script>
 </body>
 </html>
-
