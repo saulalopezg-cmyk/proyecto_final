@@ -1,4 +1,4 @@
-const CACHE_NAME = "mi-pwa-cache-v6";
+const CACHE_NAME = "mi-pwa-cache-v7";
 const urlsToCache = [
   "./",
   "./index.html",
