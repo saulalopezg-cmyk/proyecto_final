@@ -4,7 +4,7 @@ export async function explain(method, context, prompt) {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      model: "models/gemini-2.5-flash",
+      model: "models/gemini-1.5-flash",
       method,
       context,
       prompt
