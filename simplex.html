@@ -36,23 +36,19 @@
 
     <div id="tablaContainer" class="tabla-responsive"></div>
 
-    <div class="botones">
-      <button id="resolverBtn" onclick="resolverSimplex()" style="display:none;">Resolver</button>
+  <div class="botones">
+  <button id="resolverBtn" onclick="resolverSimplex()" style="display:none;">Resolver</button>
 
-      <a href="index.html">
-
-        <div class="center-btn" style="margin-top:12px;">
-  <button id="btnExplicarSimplexIA" type="button">Explicar con IA</button>
-</div>
-<div id="salidaIASimplex" style="margin-top:12px;"></div>
-
-        <button>Regresar al Inicio</button>
-      </a>
-    </div>
-
-    <div id="resultado"></div>
-
+  <div class="center-btn" style="margin-top:12px;">
+    <button id="btnExplicarSimplexIA" type="button">Explicar con IA</button>
   </div>
+  <div id="salidaIASimplex" style="margin-top:12px;"></div>
+
+  <div class="center-btn" style="margin-top:12px;">
+    <a href="index.html"><button>Regresar al Inicio</button></a>
+  </div>
+</div>
+
 
   <script src="js/script2.js"></script>
   <script src="app.js"></script>
@@ -60,7 +56,8 @@
 
 
 <script type="module">
-import { explain, renderMarkdown } from "./ia.js";
+import { explain, renderMarkdown } from "./js/ia.js";
+
 
 // Lee tus mismos inputs generados por script2.js  (IDs ya existentes)
 function collectSimplexContext() {
