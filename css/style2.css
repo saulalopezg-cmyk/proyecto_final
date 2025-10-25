@@ -1,0 +1,177 @@
+/* ---------- ESTILO GENERAL ---------- */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #3e2723; /* fondo principal café oscuro */
+  color: #ffffff;
+  margin: 0;
+  padding: 15px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: #4e342e; /* contenedor café medio/oscuro */
+  padding: 30px 25px;
+  border-radius: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- TÍTULO ---------- */
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #d7ccc8; /* tono claro beige */
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- CONFIGURACIÓN ---------- */
+.config {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 150px;
+}
+
+label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #ffffff; /* texto blanco */
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 0;
+  border: none;
+  text-align: center;
+  font-size: 0.9rem;
+  background: #3e2723; /* fondo oscuro */
+  color: #ffffff;
+}
+
+/* ---------- BOTONES ---------- */
+button {
+  background: #a1887f; /* café claro / beige */
+  color: #3e2723; /* texto oscuro */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #8d6e63; /* tono más oscuro al pasar el mouse */
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* ---------- TABLAS ---------- */
+.tabla-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: #4e342e; /* fondo medio */
+  color: #ffffff;
+}
+
+th, td {
+  border: 1px solid #a1887f; /* borde beige */
+  padding: 10px;
+  text-align: center;
+  min-width: 70px;
+}
+
+th {
+  background: #3e2723; /* encabezado oscuro */
+  color: #d7ccc8;
+}
+
+input[type="number"] {
+  width: 70px;
+  background: #ffffff; /* input blanco */
+  color: #3e2723; /* texto café oscuro */
+  border-radius: 0;
+  padding: 4px;
+  border: none;
+}
+
+/* ---------- RESULTADOS ---------- */
+#resultado {
+  margin-top: 25px;
+  font-weight: bold;
+  color: #d7ccc8; /* texto beige */
+  text-align: center;
+  font-size: 1.1rem;
+  background: #3e2723; /* fondo oscuro */
+  padding: 15px;
+  border-radius: 0;
+  border: 1px solid #a1887f;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  .config {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .campo {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  button {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+#resultado {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 10px;
+  border: 2px solid #3e2723;
+  border-radius: 8px;
+  background-color: #5d4037;
+}
+.tabla-scroll {
+  overflow-x: auto;
+  margin-bottom: 10px;
+}

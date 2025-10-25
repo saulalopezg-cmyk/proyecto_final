@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Método de Asignación</title>
+  <link rel="stylesheet" href="css/style4.css">
+   <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#162447">
+</head>
+<body>
+  <main class="container">
+    <h1>Método de Asignación</h1>
+    <p>Resuelve problemas de asignación usando el Método Húngaro.</p>
+
+    <!-- Definir tamaño de la matriz -->
+    <div class="form-group">
+      <label for="n">Tamaño de la matriz (n x n):</label>
+      <input type="number" id="n" min="2" value="3">
+      <button onclick="generarMatriz()">Generar Matriz</button>
+    </div>
+
+    <!-- Aquí se genera la tabla -->
+    <div id="tablaContainer"></div>
+
+    <!-- Botones -->
+    <div id="acciones" style="display:none;">
+      <button onclick="resolverAsignacion()">Resolver</button>
+    </div>
+
+<div style="margin-top:12px;">
+  <button id="btnExplicarAsignacionIA" type="button">Explicar con IA (Asignacion)</button>
+</div>
+<div id="salidaIAAsignacion" style="margin-top:12px;"></div>
+
+
+    <!-- Resultado -->
+    <section id="resultado"></section>
+     <button onclick="irAPagina('index.html')">Regresar al inicio</button>
+  </main>
+
+  <script src="js/script4.js"></script>
+  <script src="app.js"></script>
+ <script type="module" src="js/ia.js"></script>
+
+
+
+<script type="module">
+import { explain, renderMarkdown } from "./ia.js";
+
+function collectAsignacionContext() {
+  // Suponiendo que tu tabla tiene id="tablaAsignacion" y cada celda tiene <input>
+  const tabla = document.getElementById("tablaAsignacion");
+  if (!tabla) return { costMatrix: [] };
+
+  const filas = tabla.rows.length;
+  const cols = tabla.rows[0].cells.length;
+  const costMatrix = [];
+  for (let i = 0; i < filas; i++) {
+    const row = [];
+    for (let j = 0; j < cols; j++) {
+      const inp = tabla.rows[i].cells[j].querySelector("input");
+      row.push(parseFloat(inp?.value || "0"));
+    }
+    costMatrix.push(row);
+  }
+  return { costMatrix };
+}
+
+async function onExplicarAsignacion() {
+  const out = document.getElementById("salidaIAAsignacion");
+  out.textContent = "Generando explicación...";
+  try {
+    const ctx = collectAsignacionContext();
+    const md = await explain(
+      "asignacion",
+      ctx,
+      "Resuelve el problema de Asignación con el Método Húngaro y explica paso a paso: reducciones por filas/columnas, cobertura mínima de ceros, ajustes de matriz, manejo de empates, asignaciones y costo total mínimo."
+    );
+    renderMarkdown(md, out);
+  } catch (e) {
+    out.textContent = "Error: " + e.message;
+  }
+}
+
+document.getElementById("btnExplicarAsignacionIA")
+  ?.addEventListener("click", onExplicarAsignacion);
+</script>
+
+
+</body>
+</html>
